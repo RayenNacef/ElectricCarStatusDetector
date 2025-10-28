@@ -3,7 +3,7 @@ import pickle
 
 app = Flask(__name__)
 
-# Load the pickled model
+
 with open('regmodel.pkl', 'rb') as model_file:
     regression_model = pickle.load(model_file)
 
@@ -14,22 +14,22 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
-        # Get feature values from the form
+        # feature values from the form
         time = float(request.form['Time [s]'])
         battery_voltage = float(request.form['Battery Voltage [V]'])
         motor_torque = float(request.form['Motor Torque [Nm]'])
         battery_current = float(request.form['Battery Current [A]'])
         battery_temperature = float(request.form['Battery Temperature'])
 
-        # Prepare the features for prediction
+        # prepare features for prediction
         input_features = [
             [time, battery_voltage, motor_torque, battery_current, battery_temperature]
         ]
 
-        # Make a prediction using your trained model
+        # prediction using your trained model
         prediction = regression_model.predict(input_features)
 
-        # Display the predicted status based on the prediction value
+        # predicted status based on the prediction value
         status = "Car Status: " + ("High" if prediction > 0.75 else "Medium" if prediction > 0.25 else "Low")
 
         return render_template('results.html', prediction=status)
@@ -41,7 +41,7 @@ import pickle
 
 app = Flask(__name__)
 
-# Load the pickled model
+# load the pickled model
 with open('regmodel.pkl', 'rb') as model_file:
     regression_model = pickle.load(model_file)
 
@@ -52,22 +52,22 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
-        # Get feature values from the form
+        
         time = float(request.form['Time [s]'])
         battery_voltage = float(request.form['Battery Voltage [V]'])
         motor_torque = float(request.form['Motor Torque [Nm]'])
         battery_current = float(request.form['Battery Current [A]'])
         battery_temperature = float(request.form['Battery Temperature'])
 
-        # Prepare the features for prediction
+        #features for prediction
         input_features = [
             [time, battery_voltage, motor_torque, battery_current, battery_temperature]
         ]
 
-        # Make a prediction using your trained model
+        # prediction using your trained model
         prediction = regression_model.predict(input_features)
 
-        # Display the predicted status based on the prediction value
+        # predicted status based on the prediction value
         status = "Car Status: " + ("High" if prediction > 0.75 else "Medium" if prediction > 0.25 else "Low")
 
         return render_template('results.html', prediction=status)

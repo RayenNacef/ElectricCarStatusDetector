@@ -1,0 +1,121 @@
+/* ============================
+   ELECTRIC CAR PREDICTION FORM
+   Futuristic + Glassmorphism
+=============================== */
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body, html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Background Animation */
+.background {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #1a2a6c);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Smooth background animation */
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Form Container */
+.form-container {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 40px 50px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  text-align: center;
+  width: 400px;
+  transition: 0.4s ease-in-out;
+}
+
+/* Hover glow */
+.form-container:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+}
+
+/* Title and Subtitle */
+.title {
+  font-size: 1.8rem;
+  color: #00e6e6;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  color: #d4f1f4;
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+}
+
+/* Form Input Groups */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  color: #b7f9f9;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.input-group input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  transition: 0.3s;
+  color: #333;
+}
+
+.input-group input:focus {
+  outline: none;
+  box-shadow: 0 0 10px #00e6e6;
+}
+
+/* Submit Button */
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #00e6e6, #00c3ff);
+  border: none;
+  border-radius: 10px;
+  color: #0f2027;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.4s;
+  margin-top: 10px;
+}
+
+.btn:hover {
+  background: linear-gradient(90deg, #00c3ff, #00e6e6);
+  box-shadow: 0 0 15px #00e6e6;
+  transform: scale(1.03);
+}

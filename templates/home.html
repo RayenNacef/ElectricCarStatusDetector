@@ -1,41 +1,664 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>Home</title>
-	<!-- <link rel="stylesheet" type="text/css" href="../static/css/styles.css"> -->
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Car Status Predictor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00c896;
+            --primary-dark: #00a87c;
+            --secondary: #3a3a5d;
+            --dark: #1e1e2d;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --success: #2ecc71;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e1e2d 0%, #2d2d44 100%);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 8px 15px;
+            border-radius: 30px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(0, 200, 150, 0.2);
+            color: var(--primary);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .stat-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--gray);
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .trend {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trend.up {
+            color: var(--success);
+        }
+
+        .trend.down {
+            color: var(--danger);
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-title {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .form-title h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .form-title p {
+            color: var(--gray);
+        }
+
+        .prediction-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--light);
+        }
+
+        .input-group input {
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--light);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 200, 150, 0.2);
+        }
+
+        .btn {
+            grid-column: span 2;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .results-section {
+            margin-top: 40px;
+            display: none; /* it s gonna be hidden by default, shown after prediction */
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            border-radius: 30px;
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+        }
+
+        .status-indicator.warning {
+            background: rgba(243, 156, 18, 0.2);
+            color: var(--warning);
+        }
+
+        .status-indicator.danger {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-card h3 {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        .result-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .chart-container {
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .chart-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chart-options button {
+            padding: 8px 15px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chart-options button.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Prediction Result Display */
+        .prediction-result {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .prediction-result h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .prediction-result p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .prediction-result .status-high {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .prediction-result .status-medium {
+            color: var(--warning);
+            font-weight: 700;
+        }
+
+        .prediction-result .status-low {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .prediction-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                grid-column: span 1;
+            }
+            
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .results-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-car-battery"></i>
+                <h1>EV Performance Analyzer</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="active">Dashboard</a>
+                <a href="#">Analytics</a>
+                <a href="#">History</a>
+                <a href="#">Settings</a>
+            </nav>
+        </header>
 
-	<header>
-		<div class="login">
-	<h1>Electric vehicles status prediction</h1>
+        <div class="dashboard">
+            <div class="stats-cards">
+                <div class="card stat-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Battery Health</h3>
+                    <div class="value">94%</div>
+                    <div class="trend up"><i class="fas fa-arrow-up"></i> 2% from last week</div>
+                </div>
+                <div class="card stat-card">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <h3>Efficiency</h3>
+                    <div class="value">4.2 mi/kWh</div>
+                    <div class="trend down"><i class="fas fa-arrow-down"></i> 0.1 from last month</div>
+                </div>
+                <div class="card stat-card">
+                    <i class="fas fa-thermometer-half"></i>
+                    <h3>Avg. Temperature</h3>
+                    <div class="value">32°C</div>
+                    <div class="trend up"><i class="fas fa-arrow-up"></i> 3°C from average</div>
+                </div>
+                <div class="card stat-card">
+                    <i class="fas fa-road"></i>
+                    <h3>Range Estimate</h3>
+                    <div class="value">248 mi</div>
+                    <div class="trend up"><i class="fas fa-arrow-up"></i> 12 mi from last charge</div>
+                </div>
+            </div>
 
-     <!-- Main Input For Receiving Query to our ML -->
-<form action="/predict" method="POST">
-        <input type="text" name="Time [s]" placeholder="Time [s]" required="required" /><br>
-    	<input type="text" name="Battery Voltage [V]" placeholder="Battery Voltage [V]" required="required" /><br>
-        <input type="text" name="Motor Torque [Nm]" placeholder="Motor Torque [Nm]" required="required" /><br>
-        <input type="text" name="Battery Current [A]" placeholder="Battery Current [A]" required="required" /><br>
-        <input type="text" name="Battery Temperature" placeholder="Battery Temperature" required="required" /><br>
-      
-        <button type="submit">Submit</button>
-</form>
+            <div class="form-container">
+                <div class="form-title">
+                    <h2>🔋 Electric Car Status Predictor</h2>
+                    <p>Enter vehicle data to estimate system performance.</p>
+                </div>
 
-    <!--<form action="{{ url_for('predict')}}"method="post">-->
+                <form action="/predict" method="POST" class="prediction-form" id="predictionForm">
+                    <div class="input-group">
+                        <label for="time">Time [s]</label>
+                        <input type="number" step="any" name="Time [s]" id="time" placeholder="Enter time in seconds" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="voltage">Battery Voltage [V]</label>
+                        <input type="number" step="any" name="Battery Voltage [V]" id="voltage" placeholder="Enter battery voltage" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="torque">Motor Torque [Nm]</label>
+                        <input type="number" step="any" name="Motor Torque [Nm]" id="torque" placeholder="Enter motor torque" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="current">Battery Current [A]</label>
+                        <input type="number" step="any" name="Battery Current [A]" id="current" placeholder="Enter battery current" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="temperature">Battery Temperature [°C]</label>
+                        <input type="number" step="any" name="Battery Temperature" id="temperature" placeholder="Enter battery temperature" required>
+                    </div>
+
+                    <button type="submit" class="btn">
+                        <i class="fas fa-rocket"></i> Predict Status
+                    </button>
+                </form>
                 
-       
+                <!-- Loading spinner -->
+                <div class="spinner" id="loadingSpinner"></div>
+                
+                <!-- Prediction result display -->
+                <div class="prediction-result" id="predictionResult">
+                    <h3>Prediction Result</h3>
+                    <p id="predictionText">Car Status: High</p>
+                    <p>Based on the input parameters, your vehicle is performing optimally.</p>
+                </div>
+            </div>
+        </div>
 
-        
-    
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2>Prediction Results</h2>
+                <div class="status-indicator" id="statusIndicator">
+                    <i class="fas fa-check-circle"></i>
+                    <span>System Status: Optimal</span>
+                </div>
+            </div>
 
-   <br>
-   <br>
-  
-   
- </div>
-	</header>
+            <div class="results-grid">
+                <div class="result-card">
+                    <h3>Power Output</h3>
+                    <div class="value">142 kW</div>
+                </div>
+                <div class="result-card">
+                    <h3>Energy Consumption</h3>
+                    <div class="value">28 kWh/100mi</div>
+                </div>
+                <div class="result-card">
+                    <h3>Efficiency Score</h3>
+                    <div class="value">8.7/10</div>
+                </div>
+                <div class="result-card">
+                    <h3>Battery Degradation</h3>
+                    <div class="value">2.1%</div>
+                </div>
+            </div>
+        </div>
 
+        <div class="chart-container">
+            <div class="chart-header">
+                <h2>Performance Metrics</h2>
+                <div class="chart-options">
+                    <button class="active">Day</button>
+                    <button>Week</button>
+                    <button>Month</button>
+                    <button>Year</button>
+                </div>
+            </div>
+            <div class="chart-placeholder">
+                Performance Chart Visualization
+            </div>
+        </div>
 
+        <footer>
+            <p>Electric Car Status Predictor &copy; 2023 | Advanced EV Analytics Dashboard</p>
+        </footer>
+    </div>
+
+    <script>
+        // form submission handling
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading spinner
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('predictionResult').style.display = 'none';
+            
+            // Get form values
+            const time = document.getElementById('time').value;
+            const voltage = document.getElementById('voltage').value;
+            const torque = document.getElementById('torque').value;
+            const current = document.getElementById('current').value;
+            const temperature = document.getElementById('temperature').value;
+            
+            // Simple validation
+            if (!time || !voltage || !torque || !current || !temperature) {
+                alert('Please fill in all fields');
+                document.getElementById('loadingSpinner').style.display = 'none';
+                return;
+            }
+            
+            
+            
+            setTimeout(() => {
+                // Hide loading spinner
+                document.getElementById('loadingSpinner').style.display = 'none';
+                
+                // Show prediction result
+                const predictionResult = document.getElementById('predictionResult');
+                const predictionText = document.getElementById('predictionText');
+                
+                // Update status indicator based on temperature (demo logic)
+                const statusIndicator = document.getElementById('statusIndicator');
+                if (temperature > 40) {
+                    statusIndicator.className = 'status-indicator danger';
+                    statusIndicator.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>System Status: Critical</span>';
+                    predictionText.innerHTML = 'Car Status: <span class="status-low">Low</span>';
+                    predictionText.className = 'status-low';
+                } else if (temperature > 35) {
+                    statusIndicator.className = 'status-indicator warning';
+                    statusIndicator.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>System Status: Warning</span>';
+                    predictionText.innerHTML = 'Car Status: <span class="status-medium">Medium</span>';
+                    predictionText.className = 'status-medium';
+                } else {
+                    statusIndicator.className = 'status-indicator';
+                    statusIndicator.innerHTML = '<i class="fas fa-check-circle"></i><span>System Status: Optimal</span>';
+                    predictionText.innerHTML = 'Car Status: <span class="status-high">High</span>';
+                    predictionText.className = 'status-high';
+                }
+                
+               
+                document.getElementById('resultsSection').style.display = 'block';
+                predictionResult.style.display = 'block';
+            }, 1500); // Simulate server processing time
+        });
+
+        // Chart option buttons interaction
+        const chartButtons = document.querySelectorAll('.chart-options button');
+        chartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                chartButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
 </body>
 </html>
