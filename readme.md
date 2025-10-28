@@ -37,19 +37,19 @@
 
 ---
 
-## 🌐 Flask Web App Workflow
+##  Flask Web App Workflow
 
 1. **Run the App:**
    ```bash
    python app.py
 
-## 🌐 Access the Web Interface:
+##  Access the Web Interface:
 
 1. **Open your browser and go to:**
    ```bash
    http://127.0.0.1:5000/
 
-## 🌐 Input Values:
+##  Input Values:
 
 1. **Enter the following features:**
   - Open your browser and go to:
@@ -60,7 +60,7 @@
     - **Battery Temperature**
    
 
-## 🌐 View Prediction
+##  View Prediction
 
 **The app will output:**
 ```bash
