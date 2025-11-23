@@ -136,8 +136,6 @@ print(score)
 # pickling the model file to deployment
 import pickle
 
-# Supposons que 'regression' est votre modèle de régression que vous souhaitez enregistrer
-# Train and prepare your model here
 regression = LinearRegression()
 regression.fit(X_train, Y_train)
 
